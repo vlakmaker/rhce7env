@@ -39,6 +39,10 @@
     register: job_result
     until: job_result.finished
     retries: 40
+  - name: Adjusting Services and Rebooting
+    selinux:
+      state: permissive
+      policy: targeted
   - name: Creating Welcome Message
     file:
       path: /etc/profile.d/welcome.sh
