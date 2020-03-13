@@ -25,10 +25,6 @@
     ignore_errors: yes
     async: 500
     poll: 0
-    register: ipa_sleeper
-  - name: Erasing Repos and Enabling Firewalld
-    shell: rm -rf /etc/yum.repos.d/*
-    tags: repo
   - name: Finishing IPA client configuration...Contacting IPA Server
     service: 
       name: firewalld
@@ -39,6 +35,10 @@
     register: job_result
     until: job_result.finished
     retries: 40
+  - name: Adjusting Services and Rebooting
+    selinux:
+      state: permissive
+      policy: targeted
   - name: Creating Welcome Message
     file:
       path: /etc/profile.d/welcome.sh
@@ -78,6 +78,3 @@
          # Usernames = dave, lisa
          # Passwords = password
          "
-  - name: Adjusting Services and Rebooting
-    selinux:
-      state: permissive
